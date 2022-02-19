@@ -10,7 +10,8 @@ import ReduxThunk from 'redux-thunk';
 import productReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/order';
-import ShopNavigator from './navigation/ShopNavigator';
+import authReducer from './store/reducers/auth';
+import NavigationContainer from './navigation/NavigationContainer';
 
 LogBox.ignoreLogs([
   /\b\w*react-navigation\w*\b/,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   products: productReducer,
   cart: cartReducer,
   orders: ordersReducer,
+  auth: authReducer,
 });
 
 const middlewares = applyMiddleware(ReduxThunk);
@@ -49,7 +51,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ShopNavigator />
+      <NavigationContainer />
     </Provider>
   );
 }

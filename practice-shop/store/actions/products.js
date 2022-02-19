@@ -1,4 +1,4 @@
-import { FIREBASE_URL } from '@env';
+import { FIREBASE_DATABASE_URL } from '@env';
 import Product from '../../models/product';
 
 export const CREATE_PRODUCT = 'CREATE_PRODUCT';
@@ -7,9 +7,13 @@ export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const SET_PRODUCTS = 'SET_PRODUCTS';
 
 export const fetchProducts = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
     try {
-      const response = await fetch(FIREBASE_URL + 'products.json');
+      const token = getState().auth.token;
+      const userId = getState().auth.userId;
+      const response = await fetch(
+        FIREBASE_DATABASE_URL + `products.json?auth=${token}`
+      );
 
       if (!response.ok) {
         throw new Error('Someting went wrong!');
@@ -24,7 +28,7 @@ export const fetchProducts = () => {
         loadedProducts.push(
           new Product(
             key,
-            'u1',
+            product.ownerId,
             product.title,
             product.imageUrl,
             product.description,
@@ -33,7 +37,13 @@ export const fetchProducts = () => {
         );
       }
 
-      dispatch({ type: SET_PRODUCTS, products: loadedProducts });
+      dispatch({
+        type: SET_PRODUCTS,
+        products: loadedProducts,
+        userProducts: loadedProducts.filter(
+          (product) => product.ownerId === userId
+        ),
+      });
     } catch (err) {
       throw err;
     }
@@ -41,10 +51,14 @@ export const fetchProducts = () => {
 };
 
 export const deleteProduct = (productId) => {
-  return async (dispatch) => {
-    const response = await fetch(FIREBASE_URL + `products/${productId}.json`, {
-      method: 'DELETE',
-    });
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const response = await fetch(
+      FIREBASE_DATABASE_URL + `products/${productId}.json?auth=${token}`,
+      {
+        method: 'DELETE',
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Something went wrong!');
@@ -55,19 +69,25 @@ export const deleteProduct = (productId) => {
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
-  return async (dispatch) => {
-    const response = await fetch(FIREBASE_URL + 'products.json', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        imageUrl,
-        price,
-      }),
-    });
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
+    const response = await fetch(
+      FIREBASE_DATABASE_URL + `products.json?auth=${token}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+          price,
+          ownerId: userId,
+        }),
+      }
+    );
 
     const responseData = await response.json();
 
@@ -79,24 +99,29 @@ export const createProduct = (title, description, imageUrl, price) => {
         description,
         imageUrl,
         price,
+        ownerId: userId,
       },
     });
   };
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  return async (dispatch) => {
-    const response = await fetch(FIREBASE_URL + `products/${id}.jsson`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        title,
-        description,
-        imageUrl,
-      }),
-    });
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const response = await fetch(
+      FIREBASE_DATABASE_URL + `products/${id}.json?auth=${token}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+        }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error('Something went wrong!');
