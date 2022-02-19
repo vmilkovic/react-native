@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { LogBox } from 'react-native';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
+import ReduxThunk from 'redux-thunk';
 
 import productReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
@@ -22,7 +23,9 @@ const rootReducer = combineReducers({
   orders: ordersReducer,
 });
 
-const store = createStore(rootReducer, composeWithDevTools());
+const middlewares = applyMiddleware(ReduxThunk);
+
+const store = createStore(rootReducer, composeWithDevTools(middlewares));
 
 const fetchFonts = async () => {
   return await Font.loadAsync({
