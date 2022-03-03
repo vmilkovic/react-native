@@ -1,0 +1,46 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^12.0.5",
+    "expo": "^44.0.0",
+    "expo-file-system": "~13.1.4",
+    "expo-image-picker": "~12.0.1",
+    "expo-location": "~14.0.1",
+    "expo-permissions": "~13.1.0",
+    "expo-sqlite": "~10.1.0",
+    "expo-status-bar": "^1.2.0",
+    "moment": "^2.29.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-native": "^0.64.3",
+    "react-native-dotenv": "^3.3.1",
+    "react-native-gesture-handler": "~2.1.0",
+    "react-native-maps": "0.29.4",
+    "react-native-reanimated": "^1.13.1",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.10.1",
+    "react-native-web": "^0.17.2",
+    "react-navigation": "^4.4.4",
+    "react-navigation-header-buttons": "^6.0.0",
+    "react-navigation-stack": "^1.10.3",
+    "react-redux": "^7.2.6",
+    "redux": "^4.1.2",
+    "redux-thunk": "2.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "react-devtools-core": "4.19.1",
+    "redux-devtools-extension": "^2.13.9"
+  },
+  "resolutions": {
+    "react-devtools-core": "4.19.1"
+  },
+  "private": true
+}
