@@ -1,5 +1,6 @@
 import { FIREBASE_DATABASE_URL } from '@env';
 import Product from '../../models/product';
+import * as Notifications from 'expo-notifications';
 
 export const CREATE_PRODUCT = 'CREATE_PRODUCT';
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
@@ -29,6 +30,7 @@ export const fetchProducts = () => {
           new Product(
             key,
             product.ownerId,
+            product.ownerPushToken,
             product.title,
             product.imageUrl,
             product.description,
@@ -70,6 +72,19 @@ export const deleteProduct = (productId) => {
 
 export const createProduct = (title, description, imageUrl, price) => {
   return async (dispatch, getState) => {
+    let pushToken;
+    let statusObject = await Notifications.getPermissionsAsync();
+
+    if (statusObject.status !== 'granted') {
+      statusObject = await Notifications.getPermissionsAsync();
+    }
+
+    if (statusObject.status !== 'granted') {
+      pushToken = null;
+    } else {
+      pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+    }
+
     const token = getState().auth.token;
     const userId = getState().auth.userId;
     const response = await fetch(
@@ -85,6 +100,7 @@ export const createProduct = (title, description, imageUrl, price) => {
           imageUrl,
           price,
           ownerId: userId,
+          ownerPushToken: pushToken,
         }),
       }
     );
@@ -96,6 +112,7 @@ export const createProduct = (title, description, imageUrl, price) => {
       productData: {
         id: responseData.name,
         title,
+        pushToken,
         description,
         imageUrl,
         price,

@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import ReduxThunk from 'redux-thunk';
+import * as Notifications from 'expo-notifications';
 
 import productReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
@@ -17,6 +18,12 @@ LogBox.ignoreLogs([
   /\b\w*react-navigation\w*\b/,
   /\b\w*react-native-reanimated\w*\b/,
 ]);
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return { shouldShowAlert: true };
+  },
+});
 
 const rootReducer = combineReducers({
   products: productReducer,

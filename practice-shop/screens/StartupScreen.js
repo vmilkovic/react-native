@@ -14,7 +14,7 @@ const StartupScreen = () => {
       const userData = await AsyncStorage.getItem('userData');
 
       if (!userData) {
-        dispatch(authActions.setDidTryAL());
+        dispatch(authActions.setDidTryAl());
         return;
       }
 
@@ -23,7 +23,7 @@ const StartupScreen = () => {
       const expirationDate = new Date(expiryDate);
 
       if (expirationDate <= new Date() || !token || !userId) {
-        dispatch(authActions.setDidTryAL());
+        dispatch(authActions.setDidTryAl());
         return;
       }
 
